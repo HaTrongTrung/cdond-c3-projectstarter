@@ -1,19 +1,19 @@
 ---
 
 - name: Update/upgrade packages
-  become: yes
+  become: true
   apt:
     upgrade: yes
 
 - name: Install nodejs, npm latest
-  become: yes
+  become: true
   apt: 
     name: ["nodejs", "npm"]
     state: latest
     update_cache: yes
 
 - name: Install PM2
-  become: yes
+  become: true
   npm:
     name: pm2
     global: yes
