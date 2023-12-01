@@ -7,6 +7,7 @@ commands:
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
     steps:
+      - install_awscli
       - run:
           name: Destroy environments
           when: on_fail
@@ -194,13 +195,16 @@ jobs:
             npm install
             npm run migrations > migrations_dump.txt
       - run:
-          name: Send migration results to memstash
+          name: Send migration results to kvdb
           command: |
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
               curl --insecure https://kvdb.io/J4FrL1TzXGY6WSUjKbWK93/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
               curl --insecure https://kvdb.io/J4FrL1TzXGY6WSUjKbWK93/migration_${CIRCLE_WORKFLOW_ID:0:7}
             fi
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
       - destroy-environment
 
   deploy-frontend:
@@ -301,12 +305,10 @@ workflows:
           requires: [deploy-infrastructure]
       - run-migrations:
           requires: [configure-infrastructure]
+          context: slack-secrets
       - deploy-frontend:
           requires: [run-migrations]
       - deploy-backend:
           requires: [run-migrations]
-
-  send-notification:
-    jobs:
       - notify:
           context: slack-secrets
