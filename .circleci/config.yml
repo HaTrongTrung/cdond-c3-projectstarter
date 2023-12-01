@@ -7,7 +7,6 @@ commands:
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
     steps:
-      - install_awscli
       - run:
           name: Destroy environments
           when: on_fail
@@ -186,6 +185,7 @@ jobs:
   run-migrations:
     docker:
       - image: circleci/node:13.8.0
+      - image: amazon/aws-cli
     steps:
       - checkout
       - run:
