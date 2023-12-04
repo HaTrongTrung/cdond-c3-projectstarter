@@ -288,7 +288,7 @@ jobs:
             yum install -y tar gzip
             yum -y install curl
       - run:
-          name: Get backend url
+          name: Get backend url and backend smoke test
           command: |
             export BACKEND_IP=$(aws ec2 describe-instances \
               --filters Name=tag:Name,Values="backend-${CIRCLE_WORKFLOW_ID:0:7}" Name=instance-state-name,Values=running \
@@ -297,9 +297,6 @@ jobs:
             echo "${BACKEND_IP}"
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
-      - run:
-          name: Backend smoke test.
-          command: |
             if curl "${API_URL}/api/status"
             then
               exit 0
