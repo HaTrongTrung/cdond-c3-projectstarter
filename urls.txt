@@ -1,4 +1,5 @@
 URL01: https://github.com/HaTrongTrung/cdond-c3-projectstarter
-URL02: http://udapeople-a922c59.s3-website-us-east-1.amazonaws.com/#/employees
+URL02: http://udapeople-98ee26e.s3-website-us-east-1.amazonaws.com/#/employees
 URL03: https://d1952gq843txsu.cloudfront.net/#/employees
-URL04: http://54.160.178.44:3030/api/status
+URL04: http://54.163.214.76:3030/api/status
+URL05: http://ec2-3-90-203-106.compute-1.amazonaws.com:9090
