@@ -335,8 +335,8 @@ jobs:
             export OldWorkflowID=$(aws cloudformation list-exports \
               --query "Exports[?Name==\`WorkflowID\`].Value" \
               --no-paginate --output text)
-            echo $OldWorkflowID >> .circleci/OldWorkflowID.txt
-            cat .circleci/OldWorkflowID.txt
+            echo ${OldWorkflowID} > OldWorkflowID.txt
+            cat ./OldWorkflowID.txt
 
             aws cloudformation deploy \
               --template-file .circleci/files/cloudfront.yml \
@@ -346,6 +346,10 @@ jobs:
 
             echo OldWorkflowID: "${OldWorkflowID}"
             echo Current Workflow Id: "${CIRCLE_WORKFLOW_ID:0:7}"
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./OldWorkflowID.txt
       - destroy-environment
       - revert-migrations:
           workflowid: ${CIRCLE_WORKFLOW_ID:0:7} 
@@ -362,8 +366,7 @@ jobs:
           name: Get old stack workflow id
           command: |
             ## Fetch the Old workflow ID
-            export OldWorkflowID=$(cat .circleci/OldWorkflowID.txt)
-            tree
+            export OldWorkflowID=$(cat ./OldWorkflowID.txt)
             echo OldWorkflowID: "${OldWorkflowID}"
             echo CIRCLE_WORKFLOW_ID "${CIRCLE_WORKFLOW_ID:0:7}"
 
